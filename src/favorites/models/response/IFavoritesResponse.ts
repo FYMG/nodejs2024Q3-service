@@ -1,9 +1,9 @@
-import IArtist from '../../../artist/models/IArtist';
+import Artist from '../../../artist/models/Artist';
 import Album from '../../../album/models/Album';
 import Track from '../../../track/models/Track';
 
 export default interface IFavoritesResponse {
-  artists: IArtist[];
+  artists: Artist[];
   albums: Album[];
   tracks: Track[];
 }

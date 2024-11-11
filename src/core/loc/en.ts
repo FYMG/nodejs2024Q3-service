@@ -5,6 +5,7 @@ const loc: Record<string, string> = {
   'user-already-exists': 'User already exists',
   'track-not-found': 'Track not found',
   'album-not-found': 'Album not found',
+  'artist-not-found': 'Artist not found',
 };
 
 export default loc;

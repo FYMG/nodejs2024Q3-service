@@ -26,4 +26,10 @@ export class FavoritesService {
       (id) => id !== albumId,
     );
   }
+
+  removeArtist(artistId: string) {
+    this.favorites.artists = this.favorites.artists.filter(
+      (id) => id !== artistId,
+    );
+  }
 }
