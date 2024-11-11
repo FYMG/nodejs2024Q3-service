@@ -1,4 +1,10 @@
 const loc: Record<string, string> = {
+  'server-started': `
+============================
+{{serverName}} successfully started!
+Url: {{url}}:{{port}};
+Listening on port {{port}};
+============================`,
   'invalid-input': 'Invalid input',
   'user-not-found': 'User not found',
   'old-password-is-incorrect': 'Old password is incorrect',

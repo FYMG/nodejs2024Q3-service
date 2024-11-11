@@ -54,13 +54,16 @@ export class UserController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve user by ID' })
-  @ApiParam({ name: 'id', description: 'User UUID' })
+  @ApiParam({ name: 'id', description: 'User id' })
   @ApiResponse({
     status: 200,
     description: 'User found.',
     type: UserResponse,
   })
-  @ApiResponse({ status: 400, description: 'Invalid UUID format.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid id (incorrect UUID format)',
+  })
   @ApiResponse({ status: 404, description: 'User not found.' })
   getUserById(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.userService.findById(id);
@@ -88,9 +91,12 @@ export class UserController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete user' })
-  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiParam({ name: 'id', description: 'User id' })
   @ApiResponse({ status: 204, description: 'User deleted successfully.' })
-  @ApiResponse({ status: 400, description: 'Invalid UUID format.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid id (incorrect UUID format)',
+  })
   @ApiResponse({ status: 404, description: 'User not found.' })
   deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
     this.userService.delete(id);

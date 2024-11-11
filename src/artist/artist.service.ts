@@ -8,7 +8,7 @@ import { AlbumService } from '../album/album.service';
 import { TrackService } from '../track/track.service';
 import { FavoritesService } from '../favorites/favorites.service';
 import Artist from './models/Artist';
-import { t } from '../core/loc';
+import { t } from '../shared/loc';
 import CreateArtistDto from './models/dto/CreateArtistDto';
 import { v4 as uuidv4 } from 'uuid';
 

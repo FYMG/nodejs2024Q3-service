@@ -7,8 +7,8 @@ import User from './models/User';
 import CreateUserDto from './models/dto/CreateUserDto';
 import { v4 as uuidv4 } from 'uuid';
 import UpdatePasswordDto from './models/dto/UpdatePasswordDto';
-import { t } from '../core/loc';
-import removeObjectKey from '../core/helpers/removeObjectKey';
+import { t } from '../shared/loc';
+import removeObjectKey from '../shared/helpers/removeObjectKey';
 import { UserResponseType } from './models/responses/UserResponse';
 
 @Injectable()

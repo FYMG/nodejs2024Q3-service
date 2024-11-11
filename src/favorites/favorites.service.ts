@@ -9,7 +9,7 @@ import Favorites from './models/Favorites';
 import { TrackService } from '../track/track.service';
 import { AlbumService } from '../album/album.service';
 import { ArtistService } from '../artist/artist.service';
-import { t } from '../core/loc';
+import { t } from '../shared/loc';
 
 @Injectable()
 export class FavoritesService {

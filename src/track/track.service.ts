@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import CreateTrackDto from './models/dto/CreateTrackDto';
 import Track from './models/Track';
 import { FavoritesService } from '../favorites/favorites.service';
-import { t } from '../core/loc';
+import { t } from '../shared/loc';
 
 @Injectable()
 export class TrackService {

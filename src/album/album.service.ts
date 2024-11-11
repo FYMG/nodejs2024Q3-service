@@ -8,7 +8,7 @@ import { FavoritesService } from '../favorites/favorites.service';
 import { TrackService } from '../track/track.service';
 import Album from './models/Album';
 import { v4 as uuidv4 } from 'uuid';
-import { t } from '../core/loc';
+import { t } from '../shared/loc';
 import CreateAlbumDto from './models/dto/CreateAlbumDto';
 
 @Injectable()

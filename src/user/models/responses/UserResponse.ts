@@ -5,6 +5,7 @@ type UserResponseType = Omit<User, 'password'>;
 
 export default class UserResponse {
   @ApiProperty({
+    type: String,
     format: 'uuid',
     example: 'd82beced-574c-41a9-a7f8-6c2659d3d72e',
     description: 'User id (uuid v4).',

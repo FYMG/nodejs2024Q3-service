@@ -33,13 +33,16 @@ export class AlbumController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get album by id' })
-  @ApiParam({ name: 'id', description: 'Album UUID' })
+  @ApiParam({ name: 'id', description: 'Album id' })
   @ApiResponse({
     status: 200,
     description: 'Album found.',
     type: AlbumResponseDto,
   })
-  @ApiResponse({ status: 400, description: 'Invalid UUID.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid id (incorrect UUID format)',
+  })
   @ApiResponse({ status: 404, description: 'Album not found.' })
   getById(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.albumsService.getAlbumById(id);
@@ -60,13 +63,16 @@ export class AlbumController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update album info' })
-  @ApiParam({ name: 'id', description: 'Album UUID' })
+  @ApiParam({ name: 'id', description: 'Album id' })
   @ApiResponse({
     status: 200,
     description: 'Album updated successfully.',
     type: AlbumResponseDto,
   })
-  @ApiResponse({ status: 400, description: 'Invalid UUID or input.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid id (incorrect UUID) or input.',
+  })
   @ApiResponse({ status: 404, description: 'Album not found.' })
   update(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -77,10 +83,13 @@ export class AlbumController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiParam({ name: 'id', description: 'Album UUID' })
+  @ApiParam({ name: 'id', description: 'Album id' })
   @ApiOperation({ summary: 'Delete album' })
   @ApiResponse({ status: 204, description: 'Album deleted successfully.' })
-  @ApiResponse({ status: 400, description: 'Invalid UUID.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid id (incorrect UUID format)',
+  })
   @ApiResponse({ status: 404, description: 'Album not found.' })
   remove(@Param('id', new ParseUUIDPipe()) id: string) {
     this.albumsService.removeAlbum(id);

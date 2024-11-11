@@ -46,13 +46,16 @@ export class TrackController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Retrieve track by ID' })
-  @ApiParam({ name: 'id', description: 'Track UUID' })
+  @ApiParam({ name: 'id', description: 'Track id' })
   @ApiResponse({
     status: 200,
     description: 'Track found.',
     type: TrackResponse,
   })
-  @ApiResponse({ status: 400, description: 'Invalid UUID format.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid id (incorrect UUID format)',
+  })
   @ApiResponse({ status: 404, description: 'Track not found.' })
   getTrackById(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.trackService.getTrackById(id);
@@ -60,7 +63,7 @@ export class TrackController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update track details' })
-  @ApiParam({ name: 'id', description: 'Track UUID' })
+  @ApiParam({ name: 'id', description: 'Track id' })
   @ApiResponse({
     status: 200,
     description: 'Track successfully updated.',
@@ -68,7 +71,7 @@ export class TrackController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Invalid UUID format or Invalid input data.',
+    description: 'Invalid id (incorrect UUID) or input data.',
   })
   @ApiResponse({ status: 404, description: 'Track not found.' })
   updateTrack(
@@ -81,9 +84,12 @@ export class TrackController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Remove track' })
-  @ApiParam({ name: 'id', description: 'Track UUID' })
+  @ApiParam({ name: 'id', description: 'Track id' })
   @ApiResponse({ status: 204, description: 'Track successfully deleted.' })
-  @ApiResponse({ status: 400, description: 'Invalid UUID format.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid id (incorrect UUID format)',
+  })
   @ApiResponse({ status: 404, description: 'Track not found.' })
   deleteTrack(@Param('id', new ParseUUIDPipe()) id: string) {
     this.trackService.removeTrack(id);

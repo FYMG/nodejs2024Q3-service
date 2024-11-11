@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsString, Min } from 'class-validator';
+import { IsBoolean, IsString } from 'class-validator';
 
 export default class CreateArtistDto {
   @ApiProperty({

@@ -10,11 +10,12 @@ import {
   HttpStatus,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import ArtistResponseDto from './models/response/ArtistResponse';
 import { ArtistService } from './artist.service';
 import CreateArtistDto from './models/dto/CreateArtistDto';
 
+@ApiTags('Artist')
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistsService: ArtistService) {}
@@ -32,13 +33,16 @@ export class ArtistController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get artist by id' })
-  @ApiParam({ name: 'id', description: 'Artist UUID' })
+  @ApiParam({ name: 'id', description: 'Artist id' })
   @ApiResponse({
     status: 200,
     description: 'Artist found.',
     type: ArtistResponseDto,
   })
-  @ApiResponse({ status: 400, description: 'Invalid UUID.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid id (incorrect UUID format)',
+  })
   @ApiResponse({ status: 404, description: 'Artist not found.' })
   getById(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.artistsService.getById(id);
@@ -59,13 +63,16 @@ export class ArtistController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update artist info' })
-  @ApiParam({ name: 'id', description: 'Artist UUID' })
+  @ApiParam({ name: 'id', description: 'Artist id' })
   @ApiResponse({
     status: 200,
     description: 'Artist updated successfully.',
     type: ArtistResponseDto,
   })
-  @ApiResponse({ status: 400, description: 'Invalid UUID or input.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid id (incorrect UUID) or input.',
+  })
   @ApiResponse({ status: 404, description: 'Artist not found.' })
   update(
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -77,7 +84,7 @@ export class ArtistController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete artist' })
-  @ApiParam({ name: 'id', description: 'Artist UUID' })
+  @ApiParam({ name: 'id', description: 'Artist id' })
   @ApiResponse({ status: 204, description: 'Artist deleted successfully.' })
   @ApiResponse({ status: 400, description: 'Invalid UUID.' })
   @ApiResponse({ status: 404, description: 'Artist not found.' })
