@@ -5,19 +5,13 @@ import { ArtistController } from './artist/artist.controller';
 import { ArtistService } from './artist/artist.service';
 import { AlbumController } from './album/album.controller';
 import { AlbumService } from './album/album.service';
-import { FavoritesController } from './favorites/favorites.controller';
-import { FavoritesService } from './favorites/favorites.service';
 import { UserModule } from './user/user.module';
 import { TrackModule } from './track/track.module';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
-  controllers: [
-    AppController,
-    ArtistController,
-    AlbumController,
-    FavoritesController,
-  ],
-  providers: [AppService, ArtistService, AlbumService, FavoritesService],
-  imports: [UserModule, TrackModule],
+  controllers: [AppController, ArtistController, AlbumController],
+  providers: [AppService, ArtistService, AlbumService],
+  imports: [UserModule, TrackModule, FavoritesModule],
 })
 export class AppModule {}
