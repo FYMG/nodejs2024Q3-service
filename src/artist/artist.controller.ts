@@ -15,7 +15,6 @@ import ArtistResponseDto from './models/response/ArtistResponse';
 import { ArtistService } from './artist.service';
 import CreateArtistDto from './models/dto/CreateArtistDto';
 
-
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly artistsService: ArtistService) {}

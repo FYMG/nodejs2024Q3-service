@@ -1,4 +1,9 @@
-import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { AlbumService } from '../album/album.service';
 import { TrackService } from '../track/track.service';
 import { FavoritesService } from '../favorites/favorites.service';
@@ -39,7 +44,7 @@ export class ArtistService {
     return newArtist;
   }
 
-  modifyArtist (id: string, updateArtistDto: CreateArtistDto): Artist {
+  modifyArtist(id: string, updateArtistDto: CreateArtistDto): Artist {
     const artist = this.getById(id);
     Object.assign(artist, updateArtistDto);
     return artist;

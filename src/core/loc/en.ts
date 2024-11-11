@@ -6,6 +6,12 @@ const loc: Record<string, string> = {
   'track-not-found': 'Track not found',
   'album-not-found': 'Album not found',
   'artist-not-found': 'Artist not found',
+  'album-never-existed': 'Album never existed',
+  'track-never-existed': 'Track never existed',
+  'artist-never-existed': 'Artist never existed',
+  'track-not-in-favorites': 'Track not in favorites',
+  'album-not-in-favorites': 'Album not in favorites',
+  'artist-not-in-favorites': 'Artist not in favorites',
 };
 
 export default loc;

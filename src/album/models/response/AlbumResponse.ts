@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export default class AlbumResponseDto {
+export default class AlbumResponse {
   @ApiProperty({
     format: 'uuid',
     example: 'd82beced-574c-41a9-a7f8-6c2659d3d72e',
