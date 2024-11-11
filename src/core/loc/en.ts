@@ -4,6 +4,7 @@ const loc: Record<string, string> = {
   'old-password-is-incorrect': 'Old password is incorrect',
   'user-already-exists': 'User already exists',
   'track-not-found': 'Track not found',
+  'album-not-found': 'Album not found',
 };
 
 export default loc;

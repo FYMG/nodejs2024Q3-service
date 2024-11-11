@@ -1,4 +1,4 @@
-export default interface IAlbum {
+export default interface Album {
   id: string; // uuid v4
   name: string;
   year: number;

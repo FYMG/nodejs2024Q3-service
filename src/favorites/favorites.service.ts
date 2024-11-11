@@ -1,8 +1,4 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-} from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import Favorites from './models/IFavorites';
 import { TrackService } from '../track/track.service';
 
@@ -22,6 +18,12 @@ export class FavoritesService {
   removeTrack(trackId: string) {
     this.favorites.tracks = this.favorites.tracks.filter(
       (id) => id !== trackId,
+    );
+  }
+
+  removeAlbum(albumId: string) {
+    this.favorites.albums = this.favorites.albums.filter(
+      (id) => id !== albumId,
     );
   }
 }
