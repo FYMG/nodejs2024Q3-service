@@ -7,7 +7,6 @@ export default class CreateArtistDto {
     description: 'Name of the artist.',
   })
   @IsString()
-  @Min(1, { message: 'Name is required' })
   name: string;
 
   @ApiProperty({

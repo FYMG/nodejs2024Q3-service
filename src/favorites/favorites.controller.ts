@@ -9,9 +9,10 @@ import {
   ParseUUIDPipe,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
-import { ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FavoritesResponse } from './models/response/FavoritesResponse';
 
+@ApiTags('Favorites')
 @Controller('favs')
 export class FavoritesController {
   constructor(private readonly favService: FavoritesService) {}
