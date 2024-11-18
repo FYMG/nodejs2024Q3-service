@@ -1,25 +1,21 @@
 import {
+  ConflictException,
   forwardRef,
   Inject,
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import Favorites from './models/Favorites';
 import { TrackService } from '../track/track.service';
 import { AlbumService } from '../album/album.service';
 import { ArtistService } from '../artist/artist.service';
 import { t } from '../shared/loc';
+import { PrismaService } from '../core/services/prisma/prisma.service';
 
 @Injectable()
 export class FavoritesService {
-  private favoriteItems: Favorites = {
-    artists: [],
-    albums: [],
-    tracks: [],
-  };
-
   constructor(
+    private readonly prisma: PrismaService,
     @Inject(forwardRef(() => ArtistService))
     private readonly artistService: ArtistService,
     @Inject(forwardRef(() => AlbumService))
@@ -28,99 +24,104 @@ export class FavoritesService {
     private readonly trackService: TrackService,
   ) {}
 
-  getAllFavorites() {
+  async getAllFavorites() {
+    const [favoriteArtists, favoriteAlbums, favoriteTracks] = await Promise.all(
+      [
+        this.prisma.favoriteArtist.findMany(),
+        this.prisma.favoriteAlbum.findMany(),
+        this.prisma.favoriteTrack.findMany(),
+      ],
+    );
+
+    const [artists, albums, tracks] = await Promise.all([
+      this.prisma.artist.findMany({
+        where: { id: { in: favoriteArtists.map((fav) => fav.artistId) } },
+      }),
+      this.prisma.album.findMany({
+        where: { id: { in: favoriteAlbums.map((fav) => fav.albumId) } },
+      }),
+      this.prisma.track.findMany({
+        where: { id: { in: favoriteTracks.map((fav) => fav.trackId) } },
+      }),
+    ]);
+
     return {
-      artists: this.favoriteItems.artists.map((artistId) =>
-        this.artistService.getById(artistId),
-      ),
-      albums: this.favoriteItems.albums.map((albumId) =>
-        this.albumService.getAlbumById(albumId),
-      ),
-      tracks: this.favoriteItems.tracks.map((trackId) =>
-        this.trackService.getTrackById(trackId),
-      ),
+      artists,
+      albums,
+      tracks,
     };
   }
 
-  addArtistToFavorites(artistId: string) {
-    this.ensureArtistExists(artistId);
-    if (!this.favoriteItems.artists.includes(artistId)) {
-      this.favoriteItems.artists.push(artistId);
-    }
-  }
-
-  removeArtistFromFavorites(artistId: string) {
-    const artistIndex = this.favoriteItems.artists.indexOf(artistId);
-    if (artistIndex === -1)
-      throw new NotFoundException(t('track-not-in-favorites'));
-    this.favoriteItems.artists.splice(artistIndex, 1);
-  }
-
-  addAlbumToFavorites(albumId: string) {
-    this.ensureAlbumExists(albumId);
-    if (!this.favoriteItems.albums.includes(albumId)) {
-      this.favoriteItems.albums.push(albumId);
-    }
-  }
-
-  removeAlbumFromFavorites(albumId: string) {
-    const albumIndex = this.favoriteItems.albums.indexOf(albumId);
-    if (albumIndex === -1)
-      throw new NotFoundException(t('album-not-in-favorites'));
-    this.favoriteItems.albums.splice(albumIndex, 1);
-  }
-
-  addTrackToFavorites(trackId: string) {
-    this.ensureTrackExists(trackId);
-    if (!this.favoriteItems.tracks.includes(trackId)) {
-      this.favoriteItems.tracks.push(trackId);
-    }
-  }
-
-  removeTrackFromFavorites(trackId: string) {
-    const trackIndex = this.favoriteItems.tracks.indexOf(trackId);
-    if (trackIndex === -1)
-      throw new NotFoundException(t('track-not-in-favorites'));
-    this.favoriteItems.tracks.splice(trackIndex, 1);
-  }
-
-  removeArtist(artistId: string) {
-    this.favoriteItems.artists = this.favoriteItems.artists.filter(
-      (id) => id !== artistId,
-    );
-  }
-
-  removeAlbum(albumId: string) {
-    this.favoriteItems.albums = this.favoriteItems.albums.filter(
-      (id) => id !== albumId,
-    );
-  }
-
-  removeTrack(trackId: string) {
-    this.favoriteItems.tracks = this.favoriteItems.tracks.filter(
-      (id) => id !== trackId,
-    );
-  }
-
-  private ensureArtistExists(artistId: string) {
+  async addArtistToFavorites(artistId: string) {
+    await this.ensureArtistExists(artistId);
     try {
-      this.artistService.getById(artistId);
+      return await this.prisma.favoriteArtist.create({ data: { artistId } });
+    } catch {
+      throw new ConflictException(t('artist-already-in-favorites'));
+    }
+  }
+
+  async removeArtistFromFavorites(artistId: string) {
+    try {
+      await this.prisma.favoriteArtist.delete({ where: { artistId } });
+    } catch {
+      throw new NotFoundException(t('artist-not-in-favorites'));
+    }
+  }
+
+  async addAlbumToFavorites(albumId: string) {
+    await this.ensureAlbumExists(albumId);
+    try {
+      return await this.prisma.favoriteAlbum.create({ data: { albumId } });
+    } catch {
+      throw new ConflictException(t('album-already-in-favorites'));
+    }
+  }
+
+  async removeAlbumFromFavorites(albumId: string) {
+    try {
+      await this.prisma.favoriteAlbum.delete({ where: { albumId } });
+    } catch {
+      throw new NotFoundException(t('album-not-in-favorites'));
+    }
+  }
+
+  async addTrackToFavorites(trackId: string) {
+    await this.ensureTrackExists(trackId);
+    try {
+      return await this.prisma.favoriteTrack.create({ data: { trackId } });
+    } catch {
+      throw new ConflictException(t('track-already-in-favorites'));
+    }
+  }
+
+  async removeTrackFromFavorites(trackId: string) {
+    try {
+      await this.prisma.favoriteTrack.delete({ where: { trackId } });
+    } catch {
+      throw new NotFoundException(t('track-not-in-favorites'));
+    }
+  }
+
+  private async ensureArtistExists(artistId: string) {
+    try {
+      await this.artistService.getById(artistId);
     } catch {
       throw new UnprocessableEntityException(t('artist-never-existed'));
     }
   }
 
-  private ensureAlbumExists(albumId: string) {
+  private async ensureAlbumExists(albumId: string) {
     try {
-      this.albumService.getAlbumById(albumId);
+      await this.albumService.getAlbumById(albumId);
     } catch {
       throw new UnprocessableEntityException(t('album-never-existed'));
     }
   }
 
-  private ensureTrackExists(trackId: string) {
+  private async ensureTrackExists(trackId: string) {
     try {
-      this.trackService.getTrackById(trackId);
+      await this.trackService.getTrackById(trackId);
     } catch {
       throw new UnprocessableEntityException(t('track-never-existed'));
     }

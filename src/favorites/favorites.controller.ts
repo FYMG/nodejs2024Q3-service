@@ -31,8 +31,8 @@ export class FavoritesController {
     description: 'Invalid id (incorrect UUID format)',
   })
   @ApiResponse({ status: 422, description: 'Track not found.' })
-  addTrack(@Param('id', new ParseUUIDPipe()) trackId: string) {
-    this.favService.addTrackToFavorites(trackId);
+  async addTrack(@Param('id', new ParseUUIDPipe()) trackId: string) {
+    return await this.favService.addTrackToFavorites(trackId);
   }
 
   @Delete('track/:id')
@@ -45,8 +45,8 @@ export class FavoritesController {
     description: 'Invalid id (incorrect UUID format)',
   })
   @ApiResponse({ status: 404, description: 'Track not found in favorites.' })
-  removeTrack(@Param('id', new ParseUUIDPipe()) trackId: string) {
-    this.favService.removeTrackFromFavorites(trackId);
+  async removeTrack(@Param('id', new ParseUUIDPipe()) trackId: string) {
+    await this.favService.removeTrackFromFavorites(trackId);
   }
 
   @Post('album/:id')
@@ -63,8 +63,8 @@ export class FavoritesController {
     description: 'Invalid id (incorrect UUID format)',
   })
   @ApiResponse({ status: 422, description: 'Album not found.' })
-  addAlbum(@Param('id', new ParseUUIDPipe()) albumId: string) {
-    this.favService.addAlbumToFavorites(albumId);
+  async addAlbum(@Param('id', new ParseUUIDPipe()) albumId: string) {
+    return await this.favService.addAlbumToFavorites(albumId);
   }
 
   @Delete('album/:id')
@@ -77,8 +77,8 @@ export class FavoritesController {
     description: 'Invalid id (incorrect UUID format)',
   })
   @ApiResponse({ status: 404, description: 'Album not found in favorites.' })
-  removeAlbum(@Param('id', new ParseUUIDPipe()) albumId: string) {
-    this.favService.removeAlbumFromFavorites(albumId);
+  async removeAlbum(@Param('id', new ParseUUIDPipe()) albumId: string) {
+    await this.favService.removeAlbumFromFavorites(albumId);
   }
 
   @Post('artist/:id')
@@ -95,8 +95,8 @@ export class FavoritesController {
     description: 'Invalid id (incorrect UUID format)',
   })
   @ApiResponse({ status: 422, description: 'Artist not found.' })
-  addArtist(@Param('id', new ParseUUIDPipe()) artistId: string) {
-    this.favService.addArtistToFavorites(artistId);
+  async addArtist(@Param('id', new ParseUUIDPipe()) artistId: string) {
+    return await this.favService.addArtistToFavorites(artistId);
   }
 
   @Delete('artist/:id')
@@ -109,8 +109,8 @@ export class FavoritesController {
     description: 'Invalid id (incorrect UUID format)',
   })
   @ApiResponse({ status: 404, description: 'Artist not found in favorites.' })
-  removeArtist(@Param('id', new ParseUUIDPipe()) artistId: string) {
-    this.favService.removeArtistFromFavorites(artistId);
+  async removeArtist(@Param('id', new ParseUUIDPipe()) artistId: string) {
+    await this.favService.removeArtistFromFavorites(artistId);
   }
 
   @Get()
