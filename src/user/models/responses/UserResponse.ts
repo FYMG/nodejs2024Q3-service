@@ -1,9 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import User from '../User';
 
-type UserResponseType = Omit<User, 'password'>;
+type UserResponseType = {
+  id: string;
+  login: string;
+  version: number;
+  createdAt: number;
+  updatedAt: number;
+};
 
-export default class UserResponse {
+export default class UserResponse implements UserResponseType {
   @ApiProperty({
     type: String,
     format: 'uuid',
@@ -27,14 +32,14 @@ export default class UserResponse {
   version: number;
 
   @ApiProperty({
-    type: Date,
+    type: Number,
     example: 1655000000,
     description: 'Timestamp of the user creation.',
   })
   createdAt: number;
 
   @ApiProperty({
-    type: Date,
+    type: Number,
     example: 1655000000,
     description: 'Timestamp of the last user update.',
   })

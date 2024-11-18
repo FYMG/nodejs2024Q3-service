@@ -1,15 +1,14 @@
 FROM node:22.9.0
-
 WORKDIR /app
 
 COPY package*.json ./
+RUN --mount=type=cache,target=/root/.npm npm ci
 
-RUN npm install
+COPY prisma ./prisma
+RUN npx prisma generate
 
 COPY . .
-
-RUN npx prisma generate
 RUN npm run build
 
-EXPOSE 4000
-CMD ["node", "dist/main"]
+EXPOSE 3999
+CMD ["node", "dist/main.js"]

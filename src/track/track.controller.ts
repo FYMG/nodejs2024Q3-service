@@ -91,7 +91,7 @@ export class TrackController {
     description: 'Invalid id (incorrect UUID format)',
   })
   @ApiResponse({ status: 404, description: 'Track not found.' })
-  deleteTrack(@Param('id', new ParseUUIDPipe()) id: string) {
-    this.trackService.removeTrack(id);
+  async deleteTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    await this.trackService.removeTrack(id);
   }
 }

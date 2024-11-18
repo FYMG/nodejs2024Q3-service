@@ -10,9 +10,9 @@ services:
     networks:
       - app-network
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:${DB_PORT}"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -21,6 +21,7 @@ services:
     build: .
     volumes:
       - .:/app
+      - /app/node_modules
     restart: always
     depends_on:
       db:

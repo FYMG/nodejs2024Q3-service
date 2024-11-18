@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import CreateUserDto from './models/dto/CreateUserDto';
-import { v4 as uuidv4 } from 'uuid';
 import UpdatePasswordDto from './models/dto/UpdatePasswordDto';
 import { t } from '../shared/loc';
 import removeObjectKey from '../shared/helpers/removeObjectKey';
@@ -18,31 +17,34 @@ export class UserService {
 
   async findAll(): Promise<UserResponseType[]> {
     const users = await this.prisma.user.findMany();
-    return users.map((user) => removeObjectKey(user, ['password']));
+    return users.map((user) => this.prepareUserForResponse(user));
   }
 
   async findById(id: string): Promise<UserResponseType> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
-    if (!user) throw new NotFoundException(t('user-not-found'));
-    return removeObjectKey(user, ['password']);
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+    });
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return this.prepareUserForResponse(user);
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseType> {
-    const newUser = await this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
-        id: uuidv4(),
         login: createUserDto.login,
         password: createUserDto.password,
-        version: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       },
-    }) as User;
+    });
 
-    return removeObjectKey(newUser, ['password']);
+    return this.prepareUserForResponse(user);
   }
 
-  async update(id: string, updatePasswordDto: UpdatePasswordDto): Promise<UserResponseType> {
+  async update(
+    id: string,
+    updatePasswordDto: UpdatePasswordDto,
+  ): Promise<UserResponseType> {
     const user = await this.prisma.user.findUnique({ where: { id } });
     if (!user) throw new NotFoundException(t('user-not-found'));
 
@@ -57,15 +59,27 @@ export class UserService {
         version: user.version + 1,
         updatedAt: new Date(),
       },
-    }) as User;
+    });
 
-    return removeObjectKey(updatedUser, ['password']);
+    return this.prepareUserForResponse(updatedUser);
   }
 
   async delete(id: string): Promise<void> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
-    if (!user) throw new NotFoundException(t('user-not-found'));
+    const user = await this.findById(id);
 
-    await this.prisma.user.delete({ where: { id } });
+    if (user) {
+      await this.prisma.user.delete({ where: { id } });
+    }
+  }
+
+  private prepareUserForResponse(user: User): UserResponseType {
+    return removeObjectKey(
+      {
+        ...user,
+        updatedAt: user.updatedAt.getTime(),
+        createdAt: user.createdAt.getTime(),
+      },
+      ['password'],
+    );
   }
 }

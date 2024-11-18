@@ -91,7 +91,7 @@ export class AlbumController {
     description: 'Invalid id (incorrect UUID format)',
   })
   @ApiResponse({ status: 404, description: 'Album not found.' })
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    this.albumsService.removeAlbum(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    await this.albumsService.removeAlbum(id);
   }
 }

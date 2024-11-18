@@ -98,7 +98,7 @@ export class UserController {
     description: 'Invalid id (incorrect UUID format)',
   })
   @ApiResponse({ status: 404, description: 'User not found.' })
-  deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
-    this.userService.delete(id);
+  async deleteUser(@Param('id', new ParseUUIDPipe()) id: string) {
+    await this.userService.delete(id);
   }
 }

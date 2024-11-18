@@ -1,5 +1,9 @@
-import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import CreateTrackDto from './models/dto/CreateTrackDto';
 
 import { FavoritesService } from '../favorites/favorites.service';
@@ -26,14 +30,13 @@ export class TrackService {
 
   async addTrack(createTrackDto: CreateTrackDto) {
     return this.prisma.track.create({
-      data: {
-        id: uuidv4(),
-        ...createTrackDto,
-      },
+      data: createTrackDto,
     });
   }
 
   async modifyTrack(id: string, updateTrackDto: CreateTrackDto) {
+    await this.getTrackById(id);
+
     return this.prisma.track.update({
       where: { id },
       data: updateTrackDto,
@@ -41,21 +44,9 @@ export class TrackService {
   }
 
   async removeTrack(id: string) {
-    this.favoritesService.removeTrack(id);
-    return this.prisma.track.delete({ where: { id } });
-  }
-
-  async detachArtistFromTracks(artistId: string) {
-     return this.prisma.track.updateMany({
-      where: { artistId },
-      data: { artistId: null },
-    });
-  }
-
-  async detachAlbumFromTracks(albumId: string) {
-    return  this.prisma.track.updateMany({
-      where: { albumId },
-      data: { albumId: null },
-    });
+    const track = await this.getTrackById(id);
+    if (track) {
+      return this.prisma.track.delete({ where: { id } });
+    }
   }
 }

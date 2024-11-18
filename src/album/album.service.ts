@@ -1,65 +1,38 @@
-import {
-  forwardRef,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { FavoritesService } from '../favorites/favorites.service';
-import { TrackService } from '../track/track.service';
-import Album from './models/Album';
-import { v4 as uuidv4 } from 'uuid';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { t } from '../shared/loc';
 import CreateAlbumDto from './models/dto/CreateAlbumDto';
+import { PrismaService } from '../core/services/prisma/prisma.service';
 
 @Injectable()
 export class AlbumService {
-  private albums: Album[] = [];
+  constructor(private readonly prisma: PrismaService) {}
 
-  constructor(
-    @Inject(forwardRef(() => TrackService))
-    private readonly trackService: TrackService,
-    @Inject(forwardRef(() => FavoritesService))
-    private readonly favoriteService: FavoritesService,
-  ) {}
-
-  getAllAlbums(): Album[] {
-    return this.albums;
+  async getAllAlbums() {
+    return this.prisma.album.findMany();
   }
 
-  getAlbumById(id: string): Album {
-    const album = this.albums.find((album) => album.id === id);
+  async getAlbumById(id: string) {
+    const album = await this.prisma.album.findUnique({ where: { id } });
     if (!album) throw new NotFoundException(t('album-not-found'));
     return album;
   }
 
-  addAlbum(createAlbumDto: CreateAlbumDto): Album {
-    const newAlbum: Album = {
-      id: uuidv4(),
-      ...createAlbumDto,
-    };
-    this.albums.push(newAlbum);
-    return newAlbum;
+  async addAlbum(createAlbumDto: CreateAlbumDto) {
+    return this.prisma.album.create({ data: createAlbumDto });
   }
 
-  modifyAlbum(id: string, updateAlbumDto: CreateAlbumDto): Album {
-    const album = this.getAlbumById(id);
-    Object.assign(album, updateAlbumDto);
-    return album;
-  }
-
-  removeAlbum(id: string): void {
-    const albumIndex = this.albums.findIndex((album) => album.id === id);
-    if (albumIndex === -1) throw new NotFoundException(t('album-not-found'));
-    this.trackService.detachAlbumFromTracks(id);
-    this.favoriteService.removeAlbum(id);
-    this.albums.splice(albumIndex, 1);
-  }
-
-  detachArtistFromAlbums(artistId: string) {
-    this.albums.forEach((album) => {
-      if (album.artistId === artistId) {
-        album.artistId = null;
-      }
+  async modifyAlbum(id: string, updateAlbumDto: CreateAlbumDto) {
+    await this.getAlbumById(id);
+    return this.prisma.album.update({
+      where: { id },
+      data: updateAlbumDto,
     });
+  }
+
+  async removeAlbum(id: string) {
+    const album = await this.getAlbumById(id);
+    if (album) {
+      return this.prisma.album.delete({ where: { id } });
+    }
   }
 }

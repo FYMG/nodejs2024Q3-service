@@ -88,7 +88,7 @@ export class ArtistController {
   @ApiResponse({ status: 204, description: 'Artist deleted successfully.' })
   @ApiResponse({ status: 400, description: 'Invalid UUID.' })
   @ApiResponse({ status: 404, description: 'Artist not found.' })
-  remove(@Param('id', new ParseUUIDPipe()) id: string) {
-    this.artistsService.removeArtist(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    await this.artistsService.removeArtist(id);
   }
 }
