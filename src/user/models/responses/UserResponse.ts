@@ -27,14 +27,14 @@ export default class UserResponse {
   version: number;
 
   @ApiProperty({
-    type: Number,
+    type: Date,
     example: 1655000000,
     description: 'Timestamp of the user creation.',
   })
   createdAt: number;
 
   @ApiProperty({
-    type: Number,
+    type: Date,
     example: 1655000000,
     description: 'Timestamp of the last user update.',
   })
