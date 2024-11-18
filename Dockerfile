@@ -1,4 +1,4 @@
-FROM node:22.9.0
+FROM node:22-alpine3.20
 WORKDIR /app
 
 COPY package*.json ./
@@ -10,5 +10,5 @@ RUN npx prisma generate
 COPY . .
 RUN npm run build
 
-EXPOSE 3999
+EXPOSE 4000
 CMD ["node", "dist/main.js"]

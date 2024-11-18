@@ -1,35 +1,33 @@
-# compiled output
-/dist
-/node_modules
+# Ignore node_modules
+node_modules
 
-# Logs
-logs
+# Ignore build output
+dist
+
+# Ignore logs
 *.log
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
 
-# OS
-.DS_Store
+# Ignore environment files
+.env
 
-# Tests
-/coverage
-/.nyc_output
+# Ignore Docker-related files
+Dockerfile
+docker-compose.yml
 
-# IDEs and editors
-/.idea
+# Ignore other unnecessary files
+.git
+.gitignore
+README.md
+.eslintrc.js
+.prettierrc
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
 .project
 .classpath
-.c9/
-*.launch
 .settings/
+*.sublime-project
 *.sublime-workspace
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+.nbproject/
+.atom/

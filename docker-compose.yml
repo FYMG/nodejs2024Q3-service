@@ -2,30 +2,43 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:13
+    container_name: db
+    image: postgres:13-alpine
     restart: always
     env_file: .env
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - postgres-logs:/var/lib/postgresql/data/log
     networks:
       - app-network
     ports:
       - "${DB_PORT}:${DB_PORT}"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-  app:
-    build: .
-    volumes:
-      - .:/app
-      - /app/node_modules
-    restart: always
+
+  migrate:
+    container_name: migrate
+    image: fymg/nodejs2024q3-service
+    restart: 'on-failure'
+    env_file: .env
+    networks:
+      - app-network
     depends_on:
       db:
         condition: service_healthy
+    command: npm run migrate
+
+  app:
+    container_name: app
+    image: fymg/nodejs2024q3-service
+    restart: always
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
     env_file: .env
     ports:
       - '${PORT}:${PORT}'
@@ -37,4 +50,5 @@ networks:
     driver: bridge
 
 volumes:
+  postgres-logs:
   postgres-data:

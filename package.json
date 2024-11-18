@@ -19,7 +19,13 @@
     "test:refresh": "cross-env TEST_MODE=auth jest --testPathPattern refresh.e2e.spec.ts --noStackTrace --runInBand",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "migrate": "npx prisma migrate dev --preview-feature .",
+    "docker:run": "docker compose up",
+    "docker:scan": "docker scout cves fymg/nodejs2024q3-service",
+    "docker:push": "docker buildx build --output name=fymg/nodejs2024q3-service,type=image,compression=zstd,oci-mediatypes=true,push=true .",
+    "docker:build": "docker buildx build --output name=fymg/nodejs2024q3-service,type=image,compression=zstd,oci-mediatypes=true .",
+    "audit": "npm audit"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
