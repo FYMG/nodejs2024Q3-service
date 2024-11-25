@@ -7,10 +7,11 @@ import { FavoritesModule } from './favorites/favorites.module';
 import { ArtistModule } from './artist/artist.module';
 import { AlbumModule } from './album/album.module';
 import { PrismaService } from './core/services/prisma/prisma.service';
+import { LoggingService } from './core/services/logging/logging.service';
 
 @Module({
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService, PrismaService, LoggingService],
   imports: [
     UserModule,
     TrackModule,
