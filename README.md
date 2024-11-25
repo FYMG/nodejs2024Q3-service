@@ -70,3 +70,23 @@ npm run format
 Press <kbd>F5</kbd> to debug.
 
 For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+
+## Docker Desktop
+
+To run app in Docker Desktop, open new terminal and enter:
+```
+npm run docker:run
+```
+To build image
+```
+npm run docker:build
+```
+To scan app
+```
+npm run docker:scan
+```
+To push image
+```
+npm run docker:push
+```
+
