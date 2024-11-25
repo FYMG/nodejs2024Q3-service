@@ -5,14 +5,13 @@ import {
   HttpStatus,
   Post,
   UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import LoginDto from './models/dto/LoginDto';
 import SignupDto from './models/dto/SignupDto';
 import RefreshDto from './models/dto/RefreshDto';
-import { JwtAuthGuardGuard } from './guards/jwtAuthGuard.guard';
+import Public from './decorators/public.decorator';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -20,6 +19,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('signup')
+  @Public()
   @HttpCode(HttpStatus.CREATED)
   @ApiResponse({ status: 201, description: 'User registered successfully.' })
   @ApiResponse({ status: 400, description: 'Invalid input.' })
@@ -28,6 +28,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @Public()
   @ApiResponse({ status: 200, description: 'Login successful.' })
   @ApiResponse({ status: 400, description: 'Invalid input.' })
   @ApiResponse({
@@ -39,7 +40,6 @@ export class AuthController {
   }
 
   @Post('refresh')
-  @UseGuards(JwtAuthGuardGuard)
   @ApiResponse({ status: 200, description: 'Token refreshed.' })
   @ApiResponse({ status: 401, description: 'Invalid token.' })
   @ApiResponse({ status: 403, description: 'Auth failed.' })

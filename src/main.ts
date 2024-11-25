@@ -6,6 +6,7 @@ import * as dotenv from 'dotenv';
 import { t } from './shared/loc';
 import { LoggingService } from './core/services/logging/logging.service';
 import { AllExceptionsFilter } from './core/filters/allExceptions.filter';
+import setupGlobalAuthGuard from './auth/utils/setupGlobalAuthGuard';
 
 dotenv.config();
 
@@ -17,6 +18,8 @@ const VERSION = process.env.VERSION || '1.0.0';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const loggingService = app.get(LoggingService);
+
+  setupGlobalAuthGuard(app);
   app.useGlobalFilters(new AllExceptionsFilter(loggingService));
 
   process.on('uncaughtException', (err) => {
