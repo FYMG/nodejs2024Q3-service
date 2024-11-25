@@ -5,7 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import { t } from './shared/loc';
 import { LoggingService } from './core/services/logging/logging.service';
-import { AllExceptionsFilter } from './core/filters/AllExceptionsFilter';
+import { AllExceptionsFilter } from './core/filters/allExceptions.filter';
 
 dotenv.config();
 

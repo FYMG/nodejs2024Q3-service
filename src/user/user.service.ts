@@ -31,14 +31,18 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserResponseType> {
-    const user = await this.prisma.user.create({
-      data: {
-        login: createUserDto.login,
-        password: createUserDto.password,
-      },
-    });
+    try {
+      const user = await this.prisma.user.create({
+        data: {
+          login: createUserDto.login,
+          password: createUserDto.password,
+        },
+      });
 
-    return this.prepareUserForResponse(user);
+      return this.prepareUserForResponse(user);
+    } catch (error) {
+      throw new ForbiddenException(t('user-already-exists'));
+    }
   }
 
   async update(
@@ -70,6 +74,10 @@ export class UserService {
     if (user) {
       await this.prisma.user.delete({ where: { id } });
     }
+  }
+
+  async findByLogin(login: string): Promise<User> {
+    return this.prisma.user.findUnique({ where: { login } });
   }
 
   private prepareUserForResponse(user: User): UserResponseType {
