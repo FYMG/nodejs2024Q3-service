@@ -20,7 +20,7 @@ services:
 
   migrate:
     container_name: migrate
-    image: fymg/nodejs2024q3-service
+    image: fymg/nodejs2024q3-service:latest
     restart: 'on-failure'
     env_file: .env
     networks:
@@ -32,7 +32,7 @@ services:
 
   app:
     container_name: app
-    image: fymg/nodejs2024q3-service
+    image: fymg/nodejs2024q3-service:latest
     restart: always
     depends_on:
       migrate:

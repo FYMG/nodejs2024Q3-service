@@ -29,6 +29,7 @@ export class AuthController {
 
   @Post('login')
   @Public()
+  @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: 200, description: 'Login successful.' })
   @ApiResponse({ status: 400, description: 'Invalid input.' })
   @ApiResponse({
@@ -40,6 +41,8 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @Public()
+  @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: 200, description: 'Token refreshed.' })
   @ApiResponse({ status: 401, description: 'Invalid token.' })
   @ApiResponse({ status: 403, description: 'Auth failed.' })
